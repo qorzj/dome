@@ -38,6 +38,9 @@ html
 {}
 >>> print(node)
 [[[], [], ['This is Title']], [['div #1'], '\n', ['div #2']]]
+>>> print(node.dumps())
+<html><head><meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/><title>This is Title</title></head><body><div id="1st" class="cs1">div #1</div>
+<div id="2nd" style="display: none">div #2</div></body></html>
 
 >>> print(node[0][1].tag)
 meta
@@ -45,6 +48,8 @@ meta
 {'HttpEquiv': 'X-UA-Compatible', 'Content': 'IE=edge,chrome=1'}
 >>> print(node[0][1])
 []
+>>> print(node[0][1].dumps())
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 
 >>> print(node[1][0].tag)
 div
@@ -52,4 +57,6 @@ div
 {'Id': '1st', 'Class': 'cs1'}
 >>> print(node[1][0])
 ['div #1']
+>>> print(node[1][0].dumps())
+<div id="1st" class="cs1">div #1</div>
 ```
