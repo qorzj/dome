@@ -22,3 +22,12 @@ def escape(s, quote=None):
     translated.
     """
     return html.escape(s, quote)
+
+
+def versioned(filename):
+    """
+
+        >>> versioned('/js/custom.js', src='data', dist='/static')
+        '/static/js/custom_8si2je97h2.js'
+    """
+    pass
