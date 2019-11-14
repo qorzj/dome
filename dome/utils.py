@@ -1,17 +1,7 @@
-import re
+import importlib
 import html
-
-
-def uncapitalize_name(name):
-    """
-        >>> uncapitalize_name("Href")
-        'href'
-        >>> uncapitalize_name("HttpEquiv")
-        'http-equiv'
-
-    """
-
-    return re.sub( '(?<!^)(?=[A-Z])', '-', name).lower()
+import os
+from types import ModuleType
 
 
 def escape(s, quote=None):
@@ -24,10 +14,25 @@ def escape(s, quote=None):
     return html.escape(s, quote)
 
 
-def versioned(filename):
-    """
+def rreload(module):
+    """Recursively reload modules."""
+    importlib.reload(module)
+    for attribute_name in dir(module):
+        attribute = getattr(module, attribute_name)
+        if type(attribute) is ModuleType:
+            rreload(attribute)
 
-        >>> versioned('/js/custom.js', src='data', dist='/static')
-        '/static/js/custom_8si2je97h2.js'
+
+def buildjs(srcpath, distpath='static/js'):
     """
-    pass
+    example:
+        buildjs('pages')
+    """
+    os.system(f'mkdir -p {distpath}')
+    pagenames = [fname.rsplit('.')[0] for fname in os.listdir(srcpath) if fname.endswith('.py')]
+    for pagename in pagenames:
+        pyname = f'{srcpath}/{pagename}.py'
+        jsname = f'{distpath}/{pagename}.js'
+        if not os.path.isfile(jsname) or os.path.getmtime(jsname) < os.path.getmtime(pyname):
+            cmd = f'transcrypt -b -k -n {srcpath}/{pagename} && mv {srcpath}/__target__/*.js {distpath}'
+            os.system(cmd)
